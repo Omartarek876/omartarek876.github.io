@@ -1,0 +1,22 @@
+name: restore-cv
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore CV pdf
+        run: |
+          if [ -d tmpcv ]; then
+            cat tmpcv/part_* | base64 -d > Omar-Tarek-CV.pdf
+          else
+            curl -fsSL "https://raw.githubusercontent.com/Omartarek876/omartarek876.github.io/a765c63951f7eef6900ddec97ca85693241030b2/Omar-Tarek-CV.pdf" -o Omar-Tarek-CV.pdf
+          fi
+          git config user.name "Omar Tarek"
+          git config user.email "ot482002@gmail.com"
+          git add Omar-Tarek-CV.pdf
+          git commit -m "Restore Omar-Tarek-CV.pdf" || echo "no changes"
+          git push
